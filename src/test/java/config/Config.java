@@ -21,8 +21,10 @@ public class Config {
     public static final int STATUS_CODE_OK = 200;
     public static final int STATUS_CODE_CONFLICT = 409;
     public static final int STATUS_CODE_CLIENT_ERROR = 400;
+    public static final int STATUS_CODE_UNAUTHORIZED = 401;
     public static final int STATUS_CODE_NOT_FOUND = 404;
     public static final int STATUS_CODE_ACCEPTED = 202;
+    public static final int STATUS_CODE_FORBIDDEN = 403;
 
     // Таймауты
     public static final int CONNECTION_TIMEOUT_MS = 700;

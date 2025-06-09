@@ -46,10 +46,6 @@ public class UserTest {
         // Извлекаем токен
         String rawAccessToken = loggedResponse.jsonPath().getString("accessToken");
 
-//        // Удаляем префикс "Bearer ", если он есть
-//        String cleanToken = rawAccessToken != null && rawAccessToken.startsWith("Bearer ")
-//                ? rawAccessToken.substring(7)
-//                : rawAccessToken;
         try {
             // Проверяем, что тело ответа не пустое
             assertFalse("Тело ответа пустое", responseBody.isEmpty());
@@ -71,113 +67,140 @@ public class UserTest {
             assertEquals("Неверный статус код при авторизации пользователя",
                     Config.STATUS_CODE_OK,
                     statusCode);
+
         } finally {
-            // Удаляем созданного пользователя (если предусмотрен метод удаления)
+            // Удаляем созданного пользователя
             cleanUp(rawAccessToken);
         }
     }
 
 
-//    @Test
-//    @DisplayName("#2 - Авторизация пользователя без логина → 400")
-//    @Description("Проверка, что API возвращает статус 400, Ответ: \"Недостаточно данных для входа\" ")
-//    public void test2_loggedUserWithoutLogin_ShouldReturn400() {
-//        String json = "{"
-//                + "\"password\": \"" + Config.DEFAULT_PASSWORD + "\""
-//                + "}";
-//        Response response = userLoggedPartial(json);
-//        assertEquals(
-//                "Ожидается статус 400 (Bad Request)",
-//                Config.STATUS_CODE_CLIENT_ERROR,
-//                response.getStatusCode());
-//        assertEquals(
-//                "Недостаточно данных для входа",
-//                response.jsonPath().getString("message")
-//        );
-//    }
-//    @Test
-//    @DisplayName("#3 - Авторизация пользователя без пароля → 400")
-//    @Description("Проверка, что API возвращает статус 400, Ответ: \"Недостаточно данных для входа\" ")
-//    public void test3_loggedUserWithoutPassword_ShouldReturn400() {
-//        String json = "{"
-//                + "\"login\": \"" + Config.DEFAULT_USER_LOGIN_PREFIX + "\""
-//                + "}";
-//
-//        Response response = userLoggedPartial(json);
-//        assertEquals(
-//                "Ожидается статус 400 (Bad Reqest)",
-//                Config.STATUS_CODE_CLIENT_ERROR,
-//                response.getStatusCode());
-//        assertEquals(
-//                "Недостаточно данных для входа",
-//                response.jsonPath().getString("message")
-//        );
-//
-//    }
-//    @Test
-//    @DisplayName("#4 - Авторизация пользователя с password = \"\" → 400")
-//    @Description("Проверка, что API возвращает статус 400, Ответ: \"Недостаточно данных для входа\" ")
-//    public void test4_loggedUserWithoutPasswordEmpty_Return400() {
-//        String json = "{"
-//                + "\"login\": \"" + Config.DEFAULT_USER_LOGIN_PREFIX + "\","
-//                + "\"password\": \"\""
-//                + "}";
-//
-//        Response response = userLoggedPartial(json);
-//        assertEquals(
-//                "Ожидается статус 400 (Bad Reqest)",
-//                Config.STATUS_CODE_CLIENT_ERROR,
-//                response.getStatusCode());
-//        assertEquals(
-//                "Недостаточно данных для входа",
-//                response.jsonPath().getString("message")
-//        );
-//
-//    }
-//
-//    @Test
-//    @DisplayName("#5 - Авторизация пользователя с несуществующим логином")
-//    @Description("Проверка, что API возвращает статус 404, Ответ: \"Учетная запись не найдена\" ")
-//    public void test5_loggedUserNonexistentLogin_ShouldReturn404() {
-//
-//        String login = generateUniqueLogin(); // Генерация уникального логина
-//        Response loggedResponse = userLogged(login, Config.DEFAULT_PASSWORD); // Отправляем запрос на авторизацию
-//        try {
-//            // Проверка тела ответа
-//            assertFalse("Тело ответа пустое", loggedResponse.getBody().asString().isEmpty());
-//
-//            // Проверяем текст ответа
-//            assertEquals("Учетная запись не найдена", loggedResponse.jsonPath().getString("message"));
-//            // Ожидаем статус кода 404 (Not Found)
-//            assertEquals("Статус код должен быть 404 (Not Found)",
-//                    Config.STATUS_CODE_NOT_FOUND,
-//                    loggedResponse.getStatusCode());
-//        } finally {
-//            // Очистка, если нужно
-//        }
-//    }
-//    @Test
-//    @DisplayName("#6 - Авторизация пользователя с неверным паролем")
-//    @Description("Проверка, что API возвращает статус 404, Ответ: \"Учетная запись не найдена\" ")
-//    public void test6_loggedUserNonexistentPassword_ShouldReturn404() {
-//
-//        String login = generateUniqueLogin(); // Генерация уникального логина
-//        Response createResponse = createUser(login, Config.DEFAULT_PASSWORD, Config.DEFAULT_FIRST_NAME);// Отправляем запрос на создание курьера
-//        Response loggedResponse = userLogged(login, Config.DEFAULT_PASSWORD+"xxx"); // Отправляем запрос на авторизацию
-//
-//        try {
-//            // Проверка тела ответа
-//            assertFalse("Тело ответа пустое", loggedResponse.getBody().asString().isEmpty());
-//            // Проверяем текст ответа
-//            assertEquals("Учетная запись не найдена", loggedResponse.jsonPath().getString("message"));
-//            // Ожидаем статус кода 404 (Not Found)
-//            assertEquals("Статус код должен быть 404 (Not Found)",
-//                    Config.STATUS_CODE_NOT_FOUND,
-//                    loggedResponse.getStatusCode());
-//        } finally {
-//            cleanUp(login, Config.DEFAULT_PASSWORD); // Удаляем созданного курьера, даже если упадет тест
-//        }
-//    }
+    @Test
+    @DisplayName("#2 - Авторизация пользователя без логина → 401")
+    @Description("Проверка, что API возвращает статус 401, Ответ: \"email or password are incorrect\" ")
+    public void test2_loggedUserWithoutLogin_ShouldReturn401() {
+        String json = "{"
+                + "\"password\": \"" + Config.DEFAULT_PASSWORD + "\""
+                + "}";
+        Response response = userLoggedPartial(json);
+        assertFalse("success должен быть false", response.jsonPath().getBoolean("success"));
+        assertEquals(
+                "Ожидается статус 401 (Bad Request)",
+                Config.STATUS_CODE_UNAUTHORIZED,
+                response.getStatusCode());
+        assertEquals(
+                "email or password are incorrect",
+                response.jsonPath().getString("message")
+        );
+    }
+    @Test
+    @DisplayName("#3 - Авторизация пользователя без пароля → 401")
+    @Description("Проверка, что API возвращает статус 401, Ответ: \"email or password are incorrect\" ")
+    public void test3_loggedUserWithoutPassword_ShouldReturn401() {
+        String json = "{"
+                + "\"login\": \"" + Config.DEFAULT_USER_LOGIN_PREFIX + "\""
+                + "}";
+
+        Response response = userLoggedPartial(json);
+        assertFalse("success должен быть false", response.jsonPath().getBoolean("success"));
+        assertEquals(
+                "Ожидается статус 400 (Bad Reqest)",
+                Config.STATUS_CODE_UNAUTHORIZED,
+                response.getStatusCode());
+        assertEquals(
+                "email or password are incorrect",
+                response.jsonPath().getString("message")
+        );
+
+    }
+    @Test
+    @DisplayName("#4 - Авторизация пользователя под существующим пользователем → 403")
+    @Description("Проверка, что API возвращает статус 403, Ответ: \"User already exists\" ")
+    public void test4_testRegistrationWithExistingLogin_Return403() {
+        // Генерируем уникальное имя пользователя
+        String uniqueName = generateUniqueLogin();
+
+        // Формируем уникальный email на основе имени
+        String email = uniqueName + "@mail.ru";
+
+        // Отправляем запрос на создание пользователя (регистрацию)
+        Response createResponse = createUser(uniqueName, email, Config.DEFAULT_PASSWORD);
+
+        // Извлекаем токен
+        String rawAccessToken = createResponse.jsonPath().getString("accessToken");
+        // Отправляем повторно запрос на создание
+        Response createResponseRet = createUser(uniqueName, email, Config.DEFAULT_PASSWORD);
+        try {
+            // Проверка тела ответа
+            assertFalse("Тело ответа пустое", createResponseRet.getBody().asString().isEmpty());
+            assertFalse("success должен быть false", createResponseRet.jsonPath().getBoolean("success"));
+            // Проверяем текст ответа
+            assertEquals("User already exists", createResponseRet.jsonPath().getString("message"));
+            // Ожидаем статус кода 403 (Not Found)
+            assertEquals("Статус код должен быть 403",
+                    Config.STATUS_CODE_FORBIDDEN,
+                    createResponseRet.getStatusCode());
+        } finally {
+            // Удаляем созданного пользователя
+            cleanUp(rawAccessToken);
+        }
+    }
+
+    @Test
+    @DisplayName("#5 - Авторизация пользователя с несуществующим логином")
+    @Description("Проверка, что API возвращает статус 401, Ответ: \"email or password are incorrect\" ")
+    public void test5_loggedUserNonexistentLogin_ShouldReturn403() {
+
+        String login = generateUniqueLogin(); // Генерация уникального логина
+        Response loggedResponse = userLogged(login, Config.DEFAULT_PASSWORD); // Отправляем запрос на авторизацию
+        try {
+            // Проверка тела ответа
+            assertFalse("Тело ответа пустое", loggedResponse.getBody().asString().isEmpty());
+            assertFalse("success должен быть false", loggedResponse.jsonPath().getBoolean("success"));
+            // Проверяем текст ответа
+            assertEquals("email or password are incorrect", loggedResponse.jsonPath().getString("message"));
+            // Ожидаем статус кода 401 (Not Found)
+            assertEquals("Статус код должен быть 401 (Not Found)",
+                    Config.STATUS_CODE_UNAUTHORIZED,
+                    loggedResponse.getStatusCode());
+        } finally {
+            // Очистка, если нужно
+        }
+    }
+    @Test
+    @DisplayName("#6 - Авторизация пользователя с неверным паролем")
+    @Description("Проверка, что API возвращает статус 401, Ответ: \"email or password are incorrect\" ")
+    public void test6_loggedUserNonexistentPassword_ShouldReturn401() {
+
+        // Генерируем уникальное имя пользователя
+        String uniqueName = generateUniqueLogin();
+
+        // Формируем уникальный email на основе имени
+        String email = uniqueName + "@mail.ru";
+
+        // Отправляем запрос на создание пользователя (регистрацию)
+        Response createResponse = createUser(uniqueName, email, Config.DEFAULT_PASSWORD);
+
+        // Извлекаем токен
+        String rawAccessToken = createResponse.jsonPath().getString("accessToken");
+        // Отправляем запрос на авторизацию
+        Response loggedResponse = userLogged(email, Config.DEFAULT_PASSWORD+"xxx");
+
+        try {
+            assertFalse("success должен быть false", loggedResponse.jsonPath().getBoolean("success"));
+            // Проверка тела ответа
+            assertFalse("Тело ответа пустое", loggedResponse.getBody().asString().isEmpty());
+            // Проверяем текст ответа
+            assertEquals("email or password are incorrect", loggedResponse.jsonPath().getString("message"));
+            // Ожидаем статус кода 401 (Not Found)
+            assertEquals("Статус код должен быть 401",
+                    Config.STATUS_CODE_UNAUTHORIZED,
+                    loggedResponse.getStatusCode());
+        } finally {
+            // Удаляем созданного пользователя
+            cleanUp(rawAccessToken);
+        }
+    }
 //
 
 }
