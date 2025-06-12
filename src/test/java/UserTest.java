@@ -10,7 +10,7 @@ import org.junit.runners.MethodSorters;
 
 
 @Epic("API пользователя")
-@Feature("создание уникального пользователя")
+@Feature("создание, авторизация пользователя")
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserTest {
@@ -201,6 +201,5 @@ public class UserTest {
             cleanUp(rawAccessToken);
         }
     }
-//
 
 }

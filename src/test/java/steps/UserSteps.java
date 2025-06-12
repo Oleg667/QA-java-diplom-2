@@ -57,7 +57,7 @@ public class UserSteps {
                 .post(Config.USER_API);
     }
     // Метод авторизации пользователя, возвращающий полный Response
-    @Step("Авторизация пользователя по логину: {name}")
+    @Step("Авторизация пользователя по логину : {name} и паролю")
     public static Response userLogged(String email, String password) {
         String requestBody = String.format(
                 "{ \"email\": \"%s\", \"password\": \"%s\" }",
@@ -79,7 +79,36 @@ public class UserSteps {
                 .post(Config.USER_LOGIN_API);
     }
 
+    // Метод редактирования данных пользователя через accessToken
+    @Step("Редактирование пользователя через accessToken")
+    public static Response editUser(String name,String email,String accessToken) {
+        String requestBody = String.format(
+                "{ \"name\": \"%s\", \"email\": \"%s\" }",
+                name, email
+        );
 
+        System.out.println("Редактирование пользователя: " + accessToken);
+
+        return given()
+                .header("Authorization", accessToken)
+                .header("Content-Type", "application/json")
+                .body(requestBody)
+                .when()
+                .patch(Config.USER_PATCH_API);
+      }
+    @Step("Редактирование пользователя без токена")
+    public static Response editUserWithoutToken(String name, String email) {
+        String requestBody = String.format(
+                "{ \"name\": \"%s\", \"email\": \"%s\" }",
+                name, email
+        );
+
+        return given()
+                .header("Content-Type", "application/json")
+                .body(requestBody)
+                .when()
+                .patch(Config.USER_PATCH_API);
+    }
     // Метод удаления пользователя через accessToken
     @Step("Удаление пользователя через accessToken")
     public static void deleteUser(String accessToken) {

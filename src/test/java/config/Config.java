@@ -8,6 +8,7 @@ public class Config {
     public static final String NEW_ORDER_API = "/api/orders"; //POST создание заказа
     public static final String USER_ORDER_API = "/api/orders"; //GET получение заказ конкретного пользователя
     public static final String USER_DEL_API = "/api/auth/user"; //DEL удаление пользователя
+    public static final String USER_PATCH_API = "/api/auth/user"; //DEL удаление пользователя
 
 
 
