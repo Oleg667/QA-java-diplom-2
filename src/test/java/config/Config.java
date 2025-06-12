@@ -9,6 +9,7 @@ public class Config {
     public static final String USER_ORDER_API = "/api/orders"; //GET получение заказ конкретного пользователя
     public static final String USER_DEL_API = "/api/auth/user"; //DEL удаление пользователя
     public static final String USER_PATCH_API = "/api/auth/user"; //DEL удаление пользователя
+    public static final String INGRADIENT_API = "/api/ingredients"; //GET получение списка инградиентов
 
 
 
@@ -28,7 +29,7 @@ public class Config {
     public static final int STATUS_CODE_FORBIDDEN = 403;
 
     // Таймауты
-    public static final int CONNECTION_TIMEOUT_MS = 700;
-    public static final int SOCKET_TIMEOUT_MS = 700;
+    public static final int CONNECTION_TIMEOUT_MS = 5000;
+    public static final int SOCKET_TIMEOUT_MS = 5000;
 
 }

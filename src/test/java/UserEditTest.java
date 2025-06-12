@@ -20,8 +20,8 @@ public class UserEditTest {
     @Description("Изменение Имени Почты Пароля")
 
 
-    public void test_Edit_User_Data() {                                              // Генерируем уникальное имя пользователя
-        String uniqueName = generateUniqueLogin();
+    public void test_Edit_User_Data() {
+        String uniqueName = generateUniqueLogin();// Генерируем уникальное имя пользователя
         String email = uniqueName + "@mail.ru";                                             // Формируем уникальный email на основе имени
         createUser(uniqueName, email, Config.DEFAULT_PASSWORD);                             // Отправляем запрос на создание пользователя (регистрацию)
         Response loggedResponse = userLogged(email, Config.DEFAULT_PASSWORD);               // Авторизуемся теми же email и паролем
