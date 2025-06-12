@@ -25,9 +25,6 @@ public class OrderSteps {
                         .setParam("http.socket.timeout", Config.SOCKET_TIMEOUT_MS) //сколько ждать ответа после подключения
                 );
     }
-
-
-
     @Step("Получить ответ со всеми ингредиентами")
     public static Response getAllIngredients() {
         return given()
@@ -61,7 +58,7 @@ public class OrderSteps {
                 .header("Content-Type", "application/json")
                 .body(orderBody)
                 .when()
-                .post("/api/orders")
+                .post(Config.NEW_ORDER_API)
                 .then()
                 .extract()
                 .response();
@@ -73,13 +70,33 @@ public class OrderSteps {
                 .header("Content-Type", "application/json")
                 .body(orderBody)
                 .when()
-                .post("/api/orders")
+                .post(Config.NEW_ORDER_API)
                 .then()
                 .extract()
                 .response();
     }
+    @Step("Список заказов пользователя")
+    public static Response OrderUser(String accessToken) {
+        return given()
+                .header("Authorization", accessToken)
+                .when()
+                .get(Config.USER_ORDER_API)
+                .then()
+                .extract()
+                .response();
+    }
+    @Step("Список Всех заказов")
+    public static Response OrderAll() {
 
-
+        return given()
+                //.log().all() // логирует весь запрос
+                .when()
+                .get(Config.ORDER_API)
+                .then()
+                //.log().all() // логирует весь ответ
+                .extract()
+                .response();
+    }
 
 }
 

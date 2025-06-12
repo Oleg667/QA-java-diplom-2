@@ -6,7 +6,8 @@ public class Config {
     public static final String USER_API = "api/auth/register"; //POST создание пользователя
     public static final String USER_LOGIN_API = "api/auth/login"; //POST авторизация пользователя
     public static final String NEW_ORDER_API = "/api/orders"; //POST создание заказа
-    public static final String USER_ORDER_API = "/api/orders"; //GET получение заказ конкретного пользователя
+    public static final String ORDER_API = "/api/orders/all"; //GET получение всех заказов
+    public static final String USER_ORDER_API = "/api/orders"; //GET получение заказов пользователя
     public static final String USER_DEL_API = "/api/auth/user"; //DEL удаление пользователя
     public static final String USER_PATCH_API = "/api/auth/user"; //DEL удаление пользователя
     public static final String INGRADIENT_API = "/api/ingredients"; //GET получение списка инградиентов
@@ -21,7 +22,7 @@ public class Config {
     // Статус-коды
     public static final int STATUS_CODE_CREATED = 201;
     public static final int STATUS_CODE_OK = 200;
-    public static final int STATUS_CODE_CONFLICT = 409;
+    public static final int STATUS_CODE_INTERNAL_SERVER_ERROR = 500;
     public static final int STATUS_CODE_CLIENT_ERROR = 400;
     public static final int STATUS_CODE_UNAUTHORIZED = 401;
     public static final int STATUS_CODE_NOT_FOUND = 404;
