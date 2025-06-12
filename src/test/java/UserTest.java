@@ -16,8 +16,8 @@ import org.junit.runners.MethodSorters;
 public class UserTest {
 
     @Test
-    @DisplayName("#1 - Успешная авторизация пользователя с полными данными")
-    @Description("Создание пользователя с уникальными данными")
+    @DisplayName("#1 - Создание уникального пользователя с полными данными")
+    @Description("Регистрация под созданным пользователем с полными данными")
 
     public void test1_creating_User_Logged() {
         // Генерируем уникальное имя пользователя
@@ -114,7 +114,7 @@ public class UserTest {
 
     }
     @Test
-    @DisplayName("#4 - Авторизация пользователя под существующим пользователем → 403")
+    @DisplayName("#4 - Создание пользователя который уже зарегистрирован → 403")
     @Description("Проверка, что API возвращает статус 403, Ответ: \"User already exists\" ")
     public void test4_testRegistrationWithExistingLogin_Return403() {
         // Генерируем уникальное имя пользователя
